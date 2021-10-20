@@ -133,6 +133,17 @@ async function build() {
   tf = 'require("./label.css");\n' + tf;
   fs.writeFileSync(tfpath, tf);
 
+  // TEMP HACK: part two for layout css
+  fs.copySync(path.join(dir, 'node_modules', '@react-spectrum', 'label', 'dist', 'main.css'), path.join(dir, 'node_modules', '@react-spectrum', 'picker', 'dist', 'label.css'));
+  let pkpath = path.join(dir, 'node_modules', '@react-spectrum', 'picker', 'dist', 'module.js');
+  let pk = fs.readFileSync(pkpath, 'utf8');
+  pk = 'import "./label.css";\n' + pk;
+  fs.writeFileSync(pkpath, pk);
+  pkpath = path.join(dir, 'node_modules', '@react-spectrum', 'picker', 'dist', 'main.js');
+  pk = fs.readFileSync(tfpath, 'utf8');
+  pk = 'require("./label.css");\n' + pk;
+  fs.writeFileSync(pkpath, pk);
+
   // Build the website
   await run('yarn', ['build'], {cwd: dir, stdio: 'inherit'});
 
